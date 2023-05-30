@@ -1,0 +1,38 @@
+<dependency>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20140107</version>
+</dependency>
+<dependency>
+	<groupId>com.github.dubasdey</groupId>
+	<artifactId>log4j2-jsonevent-layout</artifactId>
+	<version>0.0.7</version>
+</dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.sikuli/sikuli-script -->
+    <dependency>
+    <groupId>org.robotframework</groupId>
+    <artifactId>robotframework</artifactId>
+    <version>4.1.2</version>
+</dependency>
+<dependency>
+    <groupId>org.sikuli</groupId>
+    <artifactId>sikuli-api</artifactId>
+    <version>1.2.0</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi</artifactId>
+    <version>4.1.2</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi-ooxml</artifactId>
+    <version>4.1.2</version>
+</dependency>

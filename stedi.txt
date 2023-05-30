@@ -1,0 +1,154 @@
+package com.waterlabs.Eligible;
+
+import java.awt.event.KeyEvent;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.apache.poi.util.SystemOutLogger;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.sikuli.api.robot.desktop.DesktopKeyboard;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ibm.icu.text.NumberFormat.Field;
+
+public class Stedi {
+
+	public static void main(String[] args) throws InterruptedException, IOException 
+	{
+		System.setProperty("webdriver.chrome.driver", "C:\\Users\\PonkumarE\\eclipse\\chromedriver.exe");
+		 
+	    ChromeOptions options=new ChromeOptions();
+	    options.addArguments("--remote-allow-origins=*");
+	    WebDriver driver=new ChromeDriver(options);
+	    driver.get("https://www.stedi.com/edi/x12-005010/segment");
+	    driver.manage().window().maximize();
+	    Thread.sleep(5000);
+	    driver.findElement(By.xpath("//span[text()='Sign in']")).click();
+	    Thread.sleep(3000);
+	    driver.findElement(By.xpath("//input[@type='email']")).sendKeys("sharath.shankar@waterlabs.ai");
+	    Thread.sleep(2000);
+	    driver.findElement(By.xpath("//input[@type='password']")).sendKeys("Testing@123$");
+	    Thread.sleep(2000);
+	    DesktopKeyboard keyboard = new DesktopKeyboard();
+        keyboard.keyDown(KeyEvent.VK_ENTER);
+        keyboard.keyUp(KeyEvent.VK_ENTER);
+        Thread.sleep(15000);
+        FileWriter file = new FileWriter("C:\\Users\\PonkumarE\\Segment.json");
+	    ObjectMapper mapper = new ObjectMapper();
+	    int errcount=0;
+	    JSONArray arr1 = new JSONArray();
+	   
+       for(int m=1;m<=1035;m++)
+       {
+    	  
+    		  
+    	   while(true)
+    	   {
+    		   try
+    		   { 
+        driver.findElement(By.xpath("(//h2[@class='edi-ui-77e34z'])["+m+"]")).click();
+        Thread.sleep(13000);
+        break;
+    	   }
+    	   catch(Exception e)
+    	   {
+    		   errcount+=1;
+    		   if(errcount>100)
+    			   System.out.println("Network error");
+    	   }
+       } 
+	    JSONArray arr = new JSONArray();
+	    
+	    JSONObject obj1 = new JSONObject();
+	    
+	   
+	    
+	    String codeexpl=driver.findElement(By.xpath("//div[@class='edi-ui-1bbae4u']//h2[1]")).getText();
+	    LinkedHashMap<String, String>  segment = new LinkedHashMap<String, String> ();
+	    //String code=driver.findElement(By.xpath("//div[@class='edi-ui-1xu4bp6']//h1[1]")).getText();
+	    String code = driver.findElement(By.xpath("//div[@class='edi-ui-1xu4bp6']//h1[1]")).getText();
+	    //List<WebElement> tempList=driver.findElements(By.xpath("//*[@class='edi-ui-7jmolt']"));
+	    List<WebElement> tempList=driver.findElements(By.xpath("//a[@class='edi-ui-1l73iha']"));
+	   // List<WebElement> list=tempList.findElements(By.tagName("div"));
+	    System.out.println("length"+tempList.size());
+	    String header=code+" : "+codeexpl;
+	    JSONObject jsonobj=new JSONObject();
+	   
+        for(int i=1;i<=tempList.size();i++)
+        {
+        	
+        	String element=driver.findElement(By.xpath("(//a[@class='edi-ui-1p12h61'])["+i+"]")).getText();
+        	String requirement=driver.findElement(By.xpath("(//span[@class='edi-ui-4wychs'])["+i+"]")).getText();
+        	String name=driver.findElement(By.xpath("(//a[@class='edi-ui-1p12h61'])["+i+"]/../following-sibling::div")).getText();
+        	String type = driver.findElement(By.xpath("(//span[@class='edi-ui-wlhvbf'])["+i+"]")).getText();
+        	String min=driver.findElement(By.xpath("(//a[@class='edi-ui-1p12h61'])["+i+"]/../following-sibling::div[4]")).getText();
+        	String max=driver.findElement(By.xpath("(//a[@class='edi-ui-1p12h61'])["+i+"]/../following-sibling::div[5]")).getText();
+        	String repeat=driver.findElement(By.xpath("(//a[@class='edi-ui-1p12h61'])["+i+"]/../following-sibling::div[6]")).getText();
+        	String subdesc=driver.findElement(By.xpath("(//div[@class='edi-ui-ok6g41'])["+i+"]")).getText();
+        	 Map obj = new LinkedHashMap();
+          
+          obj.put("element", element);
+          obj.put("name", name);
+          obj.put("subDescription", subdesc);
+          
+          obj.put("type",type);
+          obj.put("requirement", requirement);
+         
+          
+          obj.put("min", min);
+          obj.put("max", max);
+          obj.put("repeat", repeat);
+          
+          //obj.put("Appears",appear);
+          arr.add(obj);
+        	
+        }
+        List<WebElement> tempList1=driver.findElements(By.xpath("//a[@class='edi-ui-i3sapj']"));
+        System.out.println(tempList1.size());
+        List<String> appear = new ArrayList<String>();
+        for(int k=1;k<=tempList1.size();k++)
+        {
+          appear.add(((WebElement) driver.findElement(By.xpath("(//a[@data-cy='appears-in']//span)["+k+"]"))).getText());
+        }
+       System.out.println(arr);
+       String segcode=driver.findElement(By.xpath("//h1[@class='edi-ui-1yge14l']//span[1]")).getText();
+       //JSONObject objMain = new JSONObject();
+       Map obj3 = new LinkedHashMap();
+       
+       obj3.put("segment_code",segcode);
+       obj3.put("title", header);
+       
+       obj3.put("related elements", arr);
+       obj3.put("appear_txns", appear);
+       arr1.add(obj3);
+       
+       Thread.sleep(10000);
+       driver.navigate().back();
+       Thread.sleep(3000);
+       }
+       
+       LinkedHashSet<Map> set= new LinkedHashSet<>(arr1);
+       
+       file.write(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(set).toString());
+	     
+       file.flush();
+	    
+	    
+        
+	}
+
+}
